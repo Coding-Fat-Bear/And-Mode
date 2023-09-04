@@ -1,4 +1,6 @@
-import { useElement, useLayout, useEffect } from '@nebula.js/stardust';
+import {
+  useElement, useLayout, useEffect, useApp,
+} from '@nebula.js/stardust';
 import properties from './object-properties';
 import data from './data';
 import ext from './ext';
@@ -20,9 +22,10 @@ export default function supernova(galaxy) {
     component() {
       const element = useElement();
       const layout = useLayout();
+      const app = useApp();
       console.log(layout);
 
-      useEffect(() => {
+      useEffect(async () => {
         if (layout.qSelectionInfo.qInSelections) {
           // skip rendering when in selection mode
           return;
@@ -49,8 +52,35 @@ export default function supernova(galaxy) {
           const table = '<p>Select 2 dimensions to initiate the process</p>';
           element.innerHTML = table;
         }
-
+        async function getIntTable() {
+          const tableProperties = {
+            qInfo: {
+              qType: 'my-straight-hypercube',
+            },
+            qHyperCubeDef: {
+              qDimensions: [
+                {
+                  qDef: { qFieldDefs: ['CustomerKey'] },
+                },
+              ],
+              qMeasures: [
+                {
+                  qDef: { qDef: 'Aggr(concat(distinct ProductSubcategoryName), CustomerKey)' },
+                },
+              ],
+              qInitialDataFetch: [
+                {
+                  qHeight: 5000,
+                  qWidth: 2,
+                },
+              ],
+            },
+          };
+          // const session = 
+          await app.createSessionObject(tableProperties).then((x) => x.getLayout()).then((y) => console.log(y));
+        }
         if (layout.qHyperCube.qDimensionInfo.length === 2) {
+          getIntTable();
           createTable();
         } else {
           displayReq();
