@@ -1,4 +1,5 @@
-export default async function getIntTable(firstDimension, secondDimension, app) {
+// eslint-disable-next-line consistent-return
+export default async function getIntTable(firstDimension, secondDimension, app, qtop, qheight) {
   const tableProperties = {
     qInfo: {
       qType: 'my-straight-hypercube',
@@ -16,12 +17,21 @@ export default async function getIntTable(firstDimension, secondDimension, app) 
       ],
       qInitialDataFetch: [
         {
-          qTop: 0,
-          qHeight: 5000,
+          qTop: qtop,
+          qHeight: qheight,
           qWidth: 2,
         },
       ],
     },
   };
-  await app.createSessionObject(tableProperties).then((x) => x.getLayout()).then((y) => console.log(y));
+  console.log(app);
+  console.log(qtop);
+  console.log(qheight);
+  const intTable = await app.createSessionObject(tableProperties).then((x) => x.getLayout());
+  const totalRow = intTable.qHyperCube.qSize.qcy;
+  if (qtop > totalRow) {
+    return 'completed';
+  }
+  const addedtop = qtop + 5000;
+  return getIntTable(firstDimension, secondDimension, app, addedtop, qheight);
 }

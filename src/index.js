@@ -1,5 +1,5 @@
 import {
-  useElement, useLayout, useEffect, useApp, useModel,
+  useElement, useLayout, useEffect, useApp,
 } from '@nebula.js/stardust';
 import properties from './object-properties';
 import data from './data';
@@ -15,7 +15,7 @@ import getIntTable from './methods/getIntTable';
  * @param {object=} galaxy.anything.sense Optional object only present within Sense,
  * see: https://qlik.dev/extend/build-extension/in-qlik-sense
  */
-export default  function supernova(galaxy) {
+export default function supernova(galaxy) {
   return {
     qae: {
       properties,
@@ -26,7 +26,8 @@ export default  function supernova(galaxy) {
       const element = useElement();
       const layout = useLayout();
       const app = useApp();
-      console.log(layout);
+      const qtop = 0;
+      const qheight = 5000;
       useEffect(async () => {
         if (layout.qSelectionInfo.qInSelections) {
           // skip rendering when in selection mode
@@ -35,7 +36,10 @@ export default  function supernova(galaxy) {
         if (layout.qHyperCube.qDimensionInfo.length === 2) {
           const firstDimension = layout.qHyperCube.qDimensionInfo[0].qFallbackTitle;
           const secondDimension = layout.qHyperCube.qDimensionInfo[1].qFallbackTitle;
-          getIntTable(firstDimension, secondDimension, app);
+          console.log(qtop + qheight);
+          const tdata = await getIntTable(firstDimension, secondDimension, app, qtop, qheight);
+
+          console.log(tdata);
           createTable(layout, element);
         } else {
           displayReq(element);
