@@ -7,6 +7,7 @@ import ext from './ext';
 import displayReq from './methods/displayReq';
 import createTable from './methods/createTable';
 import getIntTable from './methods/getIntTable';
+import getSelectionData from './methods/getSelectionData';
 /**
  * Entrypoint for your sense visualization
  * @param {object} galaxy Contains global settings from the environment.
@@ -26,8 +27,6 @@ export default function supernova(galaxy) {
       const element = useElement();
       const layout = useLayout();
       const app = useApp();
-      const qtop = 0;
-      const qheight = 5000;
       useEffect(async () => {
         if (layout.qSelectionInfo.qInSelections) {
           // skip rendering when in selection mode
@@ -36,15 +35,36 @@ export default function supernova(galaxy) {
         if (layout.qHyperCube.qDimensionInfo.length === 2) {
           const firstDimension = layout.qHyperCube.qDimensionInfo[0].qFallbackTitle;
           const secondDimension = layout.qHyperCube.qDimensionInfo[1].qFallbackTitle;
-          console.log(qtop + qheight);
-          const tdata = await getIntTable(firstDimension, secondDimension, app, qtop, qheight);
-
+          const qtop = 0;
+          const qHeightInt = 5000;
+          const qHeightSel = 10000;
+          const seldata = await getSelectionData(secondDimension, app, qtop, qHeightSel);
+          // const tdata = await getIntTable(firstDimension, secondDimension, app, qtop, qHeightInt);
+          // console.log(seldata);
+          // console.log(tdata);
+          createTable(element, seldata, secondDimension);
+          const tdata = await getIntTable(firstDimension, secondDimension, app, qtop, qHeightInt);
           console.log(tdata);
-          createTable(layout, element);
         } else {
           displayReq(element);
         }
-      }, [element, layout]);
+      }, [layout]);
+      useEffect(async () => {
+        if (layout.qSelectionInfo.qInSelections) {
+          // skip rendering when in selection mode
+          return;
+        }
+        if (layout.qHyperCube.qDimensionInfo.length === 2) {
+          const firstDimension = layout.qHyperCube.qDimensionInfo[0].qFallbackTitle;
+          const secondDimension = layout.qHyperCube.qDimensionInfo[1].qFallbackTitle;
+          const qtop = 0;
+          const qHeightInt = 5000;
+          const tdata = await getIntTable(firstDimension, secondDimension, app, qtop, qHeightInt);
+          console.log(tdata);
+        } else {
+          displayReq(element);
+        }
+      }, [layout]);
     },
   };
 }

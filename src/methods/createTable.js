@@ -1,12 +1,14 @@
-export default function createTable(layout, element) {
-  const hc = layout.qHyperCube;
+export default function createTable(element, seldata, secondDimension) {
+  // const hc = layout.qHyperCube;
 
   // headers
-  const columns = [...hc.qDimensionInfo, ...hc.qMeasureInfo].map((f) => f.qFallbackTitle);
-  const header = `<thead><tr>${columns.map((c) => `<th>${c}</th>`).join('')}</tr></thead>`;
-
+  // const columns = [...hc.qDimensionInfo, ...hc.qMeasureInfo].map((f) => f.qFallbackTitle);
+  // const header = `<thead><tr>${columns.map((c) => `<th>${c}</th>`).join('')}</tr></thead>`;
+  console.log(seldata);
+  const header = `<thead><tr>${secondDimension}</tr></thead>`;
   // rows
-  const rows = hc.qDataPages[0].qMatrix
+  // const rows = hc.qDataPages[0].qMatrix
+  const rows = seldata
     .map((row) => `<tr>${row.map((cell) => `<td>${cell.qText}</td>`).join('')}</tr>`)
     .join('');
 
