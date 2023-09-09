@@ -1,6 +1,7 @@
 export default async function getSelectionData(firstDimension, app, qtop, qheight, tableArr) {
   if (!tableArr) {
     // Initialize tableArr as an empty array if it's undefined
+    // eslint-disable-next-line no-param-reassign
     tableArr = [];
   }
   const tableProperties = {
@@ -22,9 +23,9 @@ export default async function getSelectionData(firstDimension, app, qtop, qheigh
       ],
     },
   };
-  console.log(app);
+  // console.log(app);
   const intTable = await app.createSessionObject(tableProperties).then((x) => x.getLayout());
-  console.log(intTable);
+  // console.log(intTable);
   const hypercube = intTable.qHyperCube.qDataPages[0].qMatrix;
   // eslint-disable-next-line no-param-reassign
   tableArr = tableArr.concat(hypercube);
